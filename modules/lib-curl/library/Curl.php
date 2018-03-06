@@ -46,6 +46,7 @@ class Curl
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 		curl_setopt($ch, CURLOPT_AUTOREFERER, true);
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $opts['method']);
+		curl_setopt($ch, CURLOPT_ENCODING, '');
 
 		// just don't verify ssl
 		if(strstr($opts['url'], 'https://')){
@@ -80,12 +81,19 @@ class Curl
 		if(!$opts['handler'])
 			return $res;
 
+		$ret = $res;
 		switch($opts['handler']){
 			case 'json':
-				$res = json_decode($res);
+				$ret = json_decode($res);
+				if(json_last_error()){
+					$fn = BASEPATH . '/etc/log/lib-curl/' . gmdate('YmdHis');
+					$f = fopen($fn, 'w');
+					fwrite($f, $res);
+					fclose($f);
+				}
 				break;
 		}
 
-		return $res;
+		return $ret;
 	}
 }
