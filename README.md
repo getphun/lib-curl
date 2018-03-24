@@ -1,5 +1,19 @@
 # lib-curl
 
+## Konfigurasi
+
+Library ini memiliki satu konfigurasi untuk me-log semua aktifitas curl seperti di bawah:
+
+```php
+return [
+	'_name' => 'Phun',
+	...,
+	'libCurl' => [
+		'log' => false
+	]
+];
+```
+
 ## Usage
 
 ```php
@@ -14,3 +28,4 @@ $res = Curl::fetch([
 	'headers' => 'Array [key=value]',
 	'handler' => 'String handler[json]'
 ]);
+```

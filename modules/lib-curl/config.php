@@ -21,5 +21,9 @@ return [
             'LibCurl\\Library\\Curl' => 'modules/lib-curl/library/Curl.php'
         ],
         'files' => []
+    ],
+
+    'libCurl' => [
+        'log' => false
     ]
 ];

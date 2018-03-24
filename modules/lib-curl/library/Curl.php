@@ -78,6 +78,16 @@ class Curl
 		$res = curl_exec($ch);
 		curl_close($ch);
 
+		if(\Phun::$dispatcher->config->libCurl['log']){
+			$fname = date('Y-m-d H:i:s - ') . uniqid();
+			$f = fopen(BASEPATH . '/etc/log/lib-curl/'.$fname, 'w');
+
+			fwrite($f, json_encode($opts, JSON_PRETTY_PRINT |  JSON_UNESCAPED_SLASHES) . PHP_EOL . PHP_EOL);
+			fwrite($f, $res);
+
+			fclose($f);
+		}
+
 		if(!$opts['handler'])
 			return $res;
 
@@ -86,7 +96,7 @@ class Curl
 			case 'json':
 				$ret = json_decode($res);
 				if(json_last_error()){
-					$fn = BASEPATH . '/etc/log/lib-curl/' . gmdate('YmdHis');
+					$fn = BASEPATH . '/etc/log/lib-curl/error-' . gmdate('YmdHis');
 					$f = fopen($fn, 'w');
 					fwrite($f, $res);
 					fclose($f);
