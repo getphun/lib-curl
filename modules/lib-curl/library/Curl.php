@@ -41,7 +41,7 @@ class Curl
 			$url.= $sign . http_build_query($opts['query']);
 		}
 		
-		$ch = curl_init($opts['url']);
+		$ch = curl_init($url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 		curl_setopt($ch, CURLOPT_AUTOREFERER, true);
@@ -79,8 +79,11 @@ class Curl
 		curl_close($ch);
 
 		if(\Phun::$dispatcher->config->libCurl['log']){
-			$fname = date('Y-m-d H:i:s - ') . uniqid();
-			$f = fopen(BASEPATH . '/etc/log/lib-curl/'.$fname, 'w');
+			$fname = gmdate('Y-m-d-H-i-s-') . uniqid();
+            $dir = BASEPATH . '/etc/log/lib-curl/' . gmdate('Y/m/d/H');
+            if(!is_dir($dir))
+                mkdir($dir, 0777, true);
+			$f = fopen($dir . '/' . $fname, 'w');
 
 			fwrite($f, json_encode($opts, JSON_PRETTY_PRINT |  JSON_UNESCAPED_SLASHES) . PHP_EOL . PHP_EOL);
 			fwrite($f, $res);
@@ -98,6 +101,7 @@ class Curl
 				if(json_last_error()){
 					$fn = BASEPATH . '/etc/log/lib-curl/error-' . gmdate('YmdHis');
 					$f = fopen($fn, 'w');
+					fwrite($f, json_encode($opts, JSON_PRETTY_PRINT |  JSON_UNESCAPED_SLASHES) . PHP_EOL . PHP_EOL);
 					fwrite($f, $res);
 					fclose($f);
 				}
