@@ -17,7 +17,8 @@ class Curl
 			'query'   => [],
 			'body'    => [],
 			'headers' => [],
-			'handler' => null
+			'handler' => null,
+			'agent'   => null
 		];
 
 		return array_replace($_opts, $opts);
@@ -47,6 +48,8 @@ class Curl
 		curl_setopt($ch, CURLOPT_AUTOREFERER, true);
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $opts['method']);
 		curl_setopt($ch, CURLOPT_ENCODING, '');
+		if($opts['agent'])
+			curl_setopt($ch, CURLOPT_USERAGENT, $opts['agent'];
 
 		// just don't verify ssl
 		if(strstr($opts['url'], 'https://')){
